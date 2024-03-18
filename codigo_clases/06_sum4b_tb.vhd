@@ -23,7 +23,7 @@ architecture sum4b_tb_arq of sum4b_tb is
 	signal ci_tb: std_logic := '0';
 	signal s_tb: std_logic_vector(3 downto 0);
 	signal co_tb: std_logic;
-	
+
 begin
 
 	-- Senales de excitacion

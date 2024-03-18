@@ -24,7 +24,7 @@ architecture contBCD_Lento_arq of contBCD_Lento is
 			s_o		: out std_logic_vector(3 downto 0)
 		);
 	end component;
-	
+
 	component genEna is
 		generic(
 			N		: natural := 4
@@ -39,11 +39,11 @@ architecture contBCD_Lento_arq of contBCD_Lento is
 
 	signal ena_pulse: std_logic;
 	signal ena_aux	: std_logic;
-	
+
 begin
 
 	ena_aux <= ena_i and ena_pulse;
-	
+
 	inst_gen_ena: genEna
 		generic map(
 			N => N
@@ -54,7 +54,7 @@ begin
 			ena_i	=> ena_i,
 			q_o 	=> ena_pulse
 		);
-		
+
 	inst_contBCD: contBCD
 		port map(
 			clk_i => clk_i,
@@ -62,5 +62,5 @@ begin
 			ena_i => ena_aux,
 			s_o => s_o
 		);
- 		
+
 end;

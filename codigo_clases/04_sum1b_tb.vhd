@@ -16,7 +16,7 @@ architecture sum1b_tb_arq of sum1b_tb is
 			co_o: out std_logic
 		);
 	end component;
-	
+
 	-- Declaracion de senales de prueba
 	signal a_tb: std_logic := '0';
 	signal b_tb: std_logic := '0';
@@ -35,11 +35,11 @@ begin
 
 	DUT: sum1b
 		port map(
-			a_i	 => a_tb, 
+			a_i	 => a_tb,
 			b_i	 => b_tb,
 			ci_i => ci_tb,
 			s_o	 => s_tb,
 			co_o => co_tb
 		);
-	
+
 end;

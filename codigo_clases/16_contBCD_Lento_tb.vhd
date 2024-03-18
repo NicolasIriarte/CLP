@@ -22,12 +22,12 @@ architecture contBCD_Lento_tb_arq of contBCD_Lento_tb is
 	signal rst_tb: std_logic := '1';
 	signal ena_tb: std_logic := '1';
 	signal s_tb: std_logic_vector(3 downto 0);
-	
+
 begin
 
 	clk_tb <= not clk_tb after 10 ns;
 	rst_tb <= '0' after 200 ns;
-	
+
 	DUT: contBCD_Lento
 		generic map(
 			N => 3
@@ -38,5 +38,5 @@ begin
 			ena_i => ena_tb,
 			s_o => s_tb
 		);
-		
+
 end;

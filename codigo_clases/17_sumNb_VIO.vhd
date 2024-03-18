@@ -10,7 +10,7 @@ end;
 
 architecture sumNb_VIO_arq of sumNb_VIO is
 	-- Parte declarativa
-	
+
 	COMPONENT vio_0
 	  PORT (
 	    clk : IN STD_LOGIC;
@@ -21,7 +21,7 @@ architecture sumNb_VIO_arq of sumNb_VIO is
 	    probe_out2 : OUT STD_LOGIC_VECTOR(0 DOWNTO 0)
 	  );
 	END COMPONENT;
-	
+
 	signal probe_a	: std_logic_vector(3 downto 0);
 	signal probe_b	: std_logic_vector(3 downto 0);
 	signal probe_ci	: std_logic;
@@ -42,7 +42,7 @@ begin
 		    s_o		=> probe_s,
 		    co_o	=> probe_co
 		);
-		
+
 	VIO_inst : vio_0
 		  PORT MAP (
 		    clk			=> clk_i,
@@ -53,5 +53,5 @@ begin
 		    probe_out2(0)	=> probe_ci
 		  );
 
-	
+
 end;

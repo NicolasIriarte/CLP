@@ -15,7 +15,7 @@ architecture neg_tb_arq of neg_tb is
 
 	signal a_tb: std_logic := '0';
 	signal b_tb: std_logic;
-	
+
 begin
 
 	a_tb <= '1' after 150 ns, '0' after 400 ns;
