@@ -9,7 +9,7 @@ architecture sum1b_tb_arq of sum1b_tb is
 	-- Declaracion de componente
 	component sum1b is
 		port(
-      a_i: in std_logic;
+			a_i: in std_logic;
 			b_i: in std_logic;
 			ci_i: in std_logic;
 			s_o: out std_logic;
