@@ -55,6 +55,20 @@ ex1:
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
     gtkwave $TEST_BENCH.vcd
 
+# Build and run exercise 2.
+ex2:
+    #!/bin/bash
+    set -e
+    DIR=2_sum4b
+
+    FILE=sum4b
+    TEST_BENCH=sum4b_tb
+
+    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/sum1b.vhd
+    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/sum1b.vhd
+    ghdl -e $TEST_BENCH
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
+    gtkwave $TEST_BENCH.vcd
 
 
 # Clean repository.
