@@ -53,7 +53,6 @@ ex1:
     ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
-    gtkwave $TEST_BENCH.vcd
 
 # Build and run exercise 2.
 ex2:
@@ -68,8 +67,13 @@ ex2:
     ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/sum1b.vhd
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
-    gtkwave $TEST_BENCH.vcd
 
+# Open last compiled file.
+wave:
+    #!/bin/bash
+    set -e
+    FILE=$(ls -t *.vcd | head -n1)
+    gtkwave $FILE
 
 # Clean repository.
 clean:
