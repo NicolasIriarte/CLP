@@ -68,6 +68,22 @@ ex2:
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
 
+
+# Build and run exercise 3.
+ex3:
+    #!/bin/bash
+    set -e
+    DIR=3_sumres4b
+
+    FILE=sumres4b
+    TEST_BENCH=sumres4b_tb
+
+    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/sum1b.vhd
+    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/sum1b.vhd
+    ghdl -e $TEST_BENCH
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
+
+
 # Open last compiled file.
 wave:
     #!/bin/bash

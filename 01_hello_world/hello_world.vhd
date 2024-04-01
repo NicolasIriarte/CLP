@@ -1,5 +1,5 @@
 --  Hello world program
-use std.textio.all; -- Imports the standard textio package.
+use std.textio.all;                     -- Imports the standard textio package.
 
 --  Defines a design entity, without any ports.
 entity hello_world is
@@ -10,7 +10,7 @@ begin
   process
     variable l : line;
   begin
-    write (l, String'("Hello world!"));
+    write (l, string'("Hello world!"));
     writeline (output, l);
     wait;
   end process;
