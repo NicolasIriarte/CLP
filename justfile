@@ -83,6 +83,19 @@ ex3:
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
 
+# Build and run exercise 4.
+ex4:
+    #!/bin/bash
+    set -e
+    DIR=4_mux_2x1
+
+    FILE=mux_2x1
+    TEST_BENCH=mux_2x1_tb
+
+    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -e $TEST_BENCH
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
 
 # Open last compiled file.
 wave:
