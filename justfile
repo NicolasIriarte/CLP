@@ -97,6 +97,35 @@ ex4:
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
 
+# Build and run exercise 5.
+ex5:
+    #!/bin/bash
+    set -e
+    DIR=5_ffd
+
+    FILE=ffd
+    TEST_BENCH=ffd_tb
+
+    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -e $TEST_BENCH
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=1000ns
+
+# Build and run the final project.
+alu:
+    #!/bin/bash
+    set -e
+    DIR=alu
+
+    FILE=alu
+    TEST_BENCH=alu_tb
+
+    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -e $TEST_BENCH
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=10ns
+
+
 # Open last compiled file.
 wave:
     #!/bin/bash

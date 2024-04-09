@@ -1,5 +1,5 @@
 ((nil . (
-         (projectile-project-compilation-cmd . "just ex4")
+         (projectile-project-compilation-cmd . "just alu")
          ))
  (nil . ((eval . (progn
                    (conda-env-activate "hdl")
