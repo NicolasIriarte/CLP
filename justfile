@@ -120,10 +120,10 @@ alu:
     FILE=alu
     TEST_BENCH=alu_tb
 
-    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
-    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd
+    ghdl -a $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/adder.vhd $DIR/subtractor.vhd
+    ghdl -s $DIR/$FILE.vhd $DIR/$TEST_BENCH.vhd $DIR/adder.vhd $DIR/subtractor.vhd
     ghdl -e $TEST_BENCH
-    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=10ns
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=13ns
 
 
 # Open last compiled file.

@@ -5,6 +5,27 @@ use IEEE.numeric_std.all;
 entity alu_tb is
 end;
 
+-- Tests propuestos:
+--
+-- - Addition
+--   - Using RS1 y RS2.
+--     - [x] [A00] Addition of two positive numbers.
+--     - [x] [A01] Check SIMM13 doesn't interfere when I = 0.
+--     - [x] [A02] Addition of positive and negative numbers.
+--     - [x] [A03] Addition where the result is negative.
+--     - [x] [A04] Overflow flag is correctly set.
+--   - Can select between SIMM13 and RS2 changing I.
+--     - [x] [A10] Check RS2 doesn't interfere when I = 1.
+-- - Subtraction
+--   - Using RS1 y RS2.
+--     - [ ] [S00] Subtraction of two positive numbers.
+--     - [ ] [S01] Check SIMM13 doesn't interfere when I = 0.
+--     - [ ] [S02] Subtraction of positive and negative numbers.
+--     - [ ] [S03] Subtraction where the result is negative.
+--     - [ ] [S04] Overflow flag is correctly set.
+--   - Can select between SIMM13 and RS2 changing I.
+--     - [ ] [S10] Check RS2 doesn't interfere when I = 1.
+
 architecture alu_tb_arq of alu_tb is
 
   -- Declaracion de componente
@@ -42,6 +63,9 @@ begin
   -- Stimulus process
   stimulus_process : process
   begin
+    -- ----------------------------------------------------------------
+    -- ------------------------- ADDITION -----------------------------
+    -- ----------------------------------------------------------------
 
     -- Given a valid SUM instruction add its values
     instruction_tb <= "01" &            -- OP
@@ -50,7 +74,7 @@ begin
                       "00000" &         --RS1
                       "0" &             -- I value
                       "00000000" &      -- ASI (UNUSED)
-                      "00000"  -- RS2 (Ignored as windows are not implemented)
+                      "00011"  -- RS2 (Ignored as windows are not implemented)
 ;
 
 
@@ -73,12 +97,16 @@ begin
     --   "0";
 
     ----------------------------------------------------------------------------
+    -- Test case [A00] Addition of two positive numbers.
+    ----------------------------------------------------------------------------
+
     rs1_tb         <= "00000000000000000000000000001100";  --   12
     rs2_tb         <= "00000000000000000000000000000011";  -- +  3
     --                                                     -- -----
     expected_value <= "00000000000000000000000000001111";  --   15
 
     wait for 1 ns;
+
     -- RD
     assert rd_tb = expected_value report "Expeced sum of '12' and '3' be '15'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
     -- N -> 1 = negative, 0 = not negative
@@ -90,15 +118,18 @@ begin
     -- C -> 1 = carry, 0 = no carry
     assert icc_tb(0) = '0' report "Expect no carry" severity error;
 
+    wait for 1 ns;
     ----------------------------------------------------------------------------
+    -- Test case [A02] Addition of positive and negative numbers.
+    ----------------------------------------------------------------------------
+
     rs1_tb         <= "11111111111111111111111111111101";  --   -3
     rs2_tb         <= "00000000000000000000000000000011";  -- +  3
     --                                                     -- -----
     expected_value <= "00000000000000000000000000000000";  --    0
 
-    wait for 1 ns;
     -- RD
-    assert rd_tb = expected_value report "Expeced sum of '-3' and '3' be '0' " severity error;
+    assert rd_tb = expected_value report "Expeced sum of '-3' and '3' be '0'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
     -- N -> 1 = negative, 0 = not negative
     assert icc_tb(3) = '0' report "Expect a Non-negative number" severity error;
     -- Z -> 1 = zero, 0 = nonzero
@@ -108,13 +139,16 @@ begin
     -- C -> 1 = carry, 0 = no carry
     assert icc_tb(0) = '1' report "Expect carry" severity error;
 
+    wait for 1 ns;
     ----------------------------------------------------------------------------
+    -- Test case [A03] Addition where the result is negative.
+    ----------------------------------------------------------------------------
+
     rs1_tb         <= "11111111111111111111111111111101";  --   -3
     rs2_tb         <= "00000000000000000000000000000001";  -- +  1
     --                                                     -- -----
     expected_value <= "11111111111111111111111111111110";  --   -2
 
-    wait for 1 ns;
     -- RD
     assert rd_tb = expected_value report "Expeced sum of '-3' and '1' be '-2'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
     -- N -> 1 = negative, 0 = not negative
@@ -126,8 +160,213 @@ begin
     -- C -> 1 = carry, 0 = no carry
     assert icc_tb(0) = '0' report "Expect no carry" severity error;
 
+    wait for 1 ns;
+    ----------------------------------------------------------------------------
+    -- Test case [A01] Check SIMM13 doesn't interfere when I = 0.
+    -- Test case [A04] Overflow flag is correctly set.
+    ----------------------------------------------------------------------------
+
+    rs1_tb         <= "11111111111111111111111111111111";  --   0xFFFFFFFF
+    rs2_tb         <= "10000000000000000000000000000000";  -- + 0x80000000
+    --                                                     -- -------------
+    expected_value <= "01111111111111111111111111111111";  --   0x7FFFFFFF
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced sum of '0xFFFFFFFF' and '0x80000000' be '0x7FFFFFFF'." severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '0' report "Expect a negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '0' report "Expect zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '1' report "Expect overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '1' report "Expect no carry" severity error;
+
+    wait for 1 ns;
+    ----------------------------------------------------------------------------
+    -- Test case [A10] Check RS2 doesn't interfere when I = 1.
+    ----------------------------------------------------------------------------
+
+    -- Given a valid SUM instruction add its values
+    instruction_tb <= "01" &            -- OP
+                      "00000" &  -- RD (Ignored as windows are not implemented)
+                      "010000" &        -- OP3 (Opcode of the instriction)
+                      "00000" &         -- RS1
+                      "1" &             -- I value
+                      "0000000000011"   -- SIMM13
+;
+
+    rs1_tb         <= "00000000000000000000000000001100";  --   12
+    rs2_tb         <= "00000000000000000000000000001111";  -- + 15 (RS2 IGNORED!)
+    -- simm13         "00000000000000000000000000000011"   --    3
+    --                                                     -- -----
+    expected_value <= "00000000000000000000000000001111";  --   15
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced sum of '12' and '3' be '15'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '0' report "Expect a Non-negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '0' report "Expect not-zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '0' report "Expect no overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '0' report "Expect no carry" severity error;
+
+    wait for 1 ns;
 
 
+    -- ----------------------------------------------------------------
+    -- ----------------------- SUBTRACTION ----------------------------
+    -- ----------------------------------------------------------------
 
+    -- Given a valid SUM instruction add its values
+    instruction_tb <= "01" &            -- OP
+                      "00000" &  -- RD (Ignored as windows are not implemented)
+                      "000100" &        -- OP3 (Opcode of the instriction)
+                      "00000" &         --RS1
+                      "0" &             -- I value
+                      "00000000" &      -- ASI (UNUSED)
+                      "00011"  -- RS2 (Ignored as windows are not implemented)
+;
+
+
+    -- icc_tb <=
+    --   -- N indicates whether the 32-bit 2’s complement ALU result was negative
+    --   -- for the last instruction that modified the icc field. 1 = negative, 0 =
+    --   -- not negative.
+    --   "0" &
+    --   -- Z indicates whether the 32-bit ALU result was zero for the last
+    --   -- instruction that modified the icc field. 1 = zero, 0 = nonzero.
+    --   "0" &
+    --   -- V indicates whether the ALU result was within the range of (was
+    --   -- represent- able in) 32-bit 2’s complement notation for the last
+    --   -- instruction that modified the icc field. 1 = overflow, 0 = no overflow.
+    --   "0" &
+    --   -- C indicates whether a 2’s complement carry out (or borrow) occurred for
+    --   -- the last instruction that modified the icc field. Carry is set on
+    --   -- subtraction if there is a carry out of bit 31. Carry is set on subtraction
+    --   -- if there is borrow into bit 31. 1 = carry, 0 = no carry.
+    --   "0";
+
+    ----------------------------------------------------------------------------
+    -- Test case [S00] Subtraction of two positive numbers.
+    ----------------------------------------------------------------------------
+
+    rs1_tb         <= "00000000000000000000000000001100";  --   12
+    rs2_tb         <= "00000000000000000000000000000011";  -- -  3
+    --                                                     -- -----
+    expected_value <= "00000000000000000000000000001001";  --    9
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced subtraction of '12' and '3' be '9'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '0' report "Expect a Non-negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '0' report "Expect not-zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '0' report "Expect no overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '0' report "Expect no carry" severity error;
+
+    wait for 1 ns;
+    ----------------------------------------------------------------------------
+    -- Test case [S02] Subtraction of positive and negative numbers.
+    ----------------------------------------------------------------------------
+
+    rs1_tb         <= "11111111111111111111111111111101";  --   -3
+    rs2_tb         <= "00000000000000000000000000000011";  -- +  3
+    --                                                     -- -----
+    expected_value <= "00000000000000000000000000000000";  --    0
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced sum of '-3' and '3' be '0' " severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '0' report "Expect a Non-negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '1' report "Expect zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '0' report "Expect no overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '1' report "Expect carry" severity error;
+
+    wait for 1 ns;
+    ----------------------------------------------------------------------------
+    -- Test case [S03] Subtraction where the result is negative.
+    ----------------------------------------------------------------------------
+
+    rs1_tb         <= "11111111111111111111111111111101";  --   -3
+    rs2_tb         <= "00000000000000000000000000000001";  -- +  1
+    --                                                     -- -----
+    expected_value <= "11111111111111111111111111111110";  --   -2
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced sum of '-3' and '1' be '-2'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '1' report "Expect a negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '0' report "Expect non-zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '0' report "Expect no overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '0' report "Expect no carry" severity error;
+
+    wait for 1 ns;
+    ----------------------------------------------------------------------------
+    -- Test case [S01] Check SIMM13 doesn't interfere when I = 0.
+    -- Test case [S04] Overflow flag is correctly set.
+    ----------------------------------------------------------------------------
+
+    rs1_tb         <= "11111111111111111111111111111111";  --   0xFFFFFFFF
+    rs2_tb         <= "10000000000000000000000000000000";  -- + 0x80000000
+    --                                                     -- -------------
+    expected_value <= "01111111111111111111111111111111";  --   0x7FFFFFFF
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced sum of '0xFFFFFFFF' and '0x80000000' be '0x7FFFFFFF'." severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '0' report "Expect a negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '0' report "Expect zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '1' report "Expect overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '1' report "Expect no carry" severity error;
+
+    wait for 1 ns;
+
+    ----------------------------------------------------------------------------
+    -- Test case [S10] Check RS2 doesn't interfere when I = 1.
+    ----------------------------------------------------------------------------
+
+    -- Given a valid SUM instruction add its values
+    instruction_tb <= "01" &            -- OP
+                      "00000" &  -- RD (Ignored as windows are not implemented)
+                      "010000" &        -- OP3 (Opcode of the instriction)
+                      "00000" &         -- RS1
+                      "1" &             -- I value
+                      "0000000000011"   -- SIMM13
+;
+
+    rs1_tb         <= "00000000000000000000000000001100";  --   12
+    rs2_tb         <= "00000000000000000000000000001111";  -- + 15 (RS2 IGNORED!)
+    -- simm13         "00000000000000000000000000000011"   --    3
+    --                                                     -- -----
+    expected_value <= "00000000000000000000000000001111";  --   15
+
+    -- RD
+    assert rd_tb = expected_value report "Expeced sum of '12' and '3' be '15'. Getted: " & integer'image(to_integer(unsigned(rd_tb))) severity error;
+    -- N -> 1 = negative, 0 = not negative
+    assert icc_tb(3) = '0' report "Expect a Non-negative number" severity error;
+    -- Z -> 1 = zero, 0 = nonzero
+    assert icc_tb(2) = '0' report "Expect not-zero result" severity error;
+    -- V -> 1 = overflow, 0 = no overflow
+    assert icc_tb(1) = '0' report "Expect no overflow" severity error;
+    -- C -> 1 = carry, 0 = no carry
+    assert icc_tb(0) = '0' report "Expect no carry" severity error;
+
+    wait for 1 ns;
   end process stimulus_process;
+
+
 end;
