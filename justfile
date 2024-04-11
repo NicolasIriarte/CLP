@@ -135,6 +135,9 @@ alu:
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=20ns
 
+    cd {{justfile_directory()}}/alu/Doc
+    pdflatex -shell-escape \\nonstopmode\\input TF-IriarteNicolas.tex || echo "Compilation failed."
+
 
 # Open last compiled file.
 wave:

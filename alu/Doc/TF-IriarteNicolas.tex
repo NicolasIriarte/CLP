@@ -1,0 +1,301 @@
+\documentclass[
+  11pt, % The default document font size, options: 10pt, 11pt, 12pt
+  codirector, % Uncomment to add a codirector to the title page
+]{charter}
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{tikz}
+%\usetikzlibrary{shapes,arrows}
+%\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, backgrounds, fit}
+\usepackage{fontawesome5}
+\usepackage{tikz,tkz-tab}
+\usepackage{booktabs} % Para tablas más elegantes
+\usetikzlibrary{positioning, arrows.meta, backgrounds, fit}
+
+\usetikzlibrary{matrix,arrows, positioning,shadows,shadings,backgrounds, calc, shapes, tikzmark}
+
+\usepackage{fmtcount}
+\usepackage{xurl}
+
+
+
+% Completar los siguintes Campos
+\materia{Testing de Software en Sistemas Embebidos}
+\bimestre{cuarto bimestre}
+\docentes{Alejandro Permingeat; Esteban	Volentini; Mariano Finochietto y Rafael Oliva}
+\titulo{Testing de emulador de microprocesaro Leon3 para desarrollo de software satelital y simuladores}
+\posgrado{Carrera de Especialización en Sistemas Embebidos}
+\autor{Ing. Iriarte Fernandez, Nicolás Ezequiel
+  (NicolasIriarte95@gmail.com)}
+\director{Esp. Lic. Horro, Nicolás Eduardo}
+\pertenenciaDirector{INVAP.\@S.E.}
+\codirector{}
+\pertenenciaCoDirector{}
+\fechaINICIO{10 de Marzo de 2024}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section*{Registros de cambios}
+\label{sec:registro}
+
+
+\begin{table}[ht]
+	\label{tab:registro}
+	\centering
+	\begin{tabularx}{\linewidth}{@{}|c|X|c|@{}}
+		\hline
+		\rowcolor[HTML]{C0C0C0}
+		Revisión & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Detalles de los cambios realizados} & Fecha      \\ \hline
+		0      & Creación del documento.                                 &\fechaInicioName \\ \hline
+
+    		1      & Se aplican cambios sugeridos por Salamandri Santiago. & 20 de noviembre de 2023 \\ \hline
+
+
+    \hline
+
+	\end{tabularx}
+	\label{sec:cierre}
+\end{table}
+
+%% \pagebreak
+
+
+\section*{Documentos anexos}
+\label{sec:documentos_anexos}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | m{1.5cm} | m{3cm} | m{10.5cm} | }
+		\hline
+		\rowcolor{gray!50} % Coloring the first row
+		\textbf{Ref.} & \textbf{Nombre} & \textbf{Descripción} \\ \hline
+    AD.01 & NEMU-SRD-1 & Especificación de requerimientos de software. \\ \hline
+		AD.02 & NEMU-UCD-0 & Defenición de casos de uso y arquitectura de software.
+    \\ \hline
+	\end{tabular}
+  \caption{Documentos anexos.}
+  \label{tab:referencias}
+
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagebreak
+
+
+\section{Introducción}
+\label{sec:org60390fa}
+
+En el presente documento se detallarán todos los aspectos relacionados con la especificación del Master Test Plan referentes al desarrollo del software del ``Emulador de microprocesador Leon3 para desarrollo de software satelital y simuladores'' referenciado en la entrada \textbf{AD.01} en la Tabla~\ref{tab:referencias}.
+
+
+\subsection{Contenidos}
+\label{sec:org434c3ef}
+
+Los contenidos del presente Master Test Plan son:
+
+\begin{itemize}
+\item Asignaciones
+\item Bases del test
+\item Estrategia general del test
+\item Estrategia por nivel de prueba
+\end{itemize}
+
+\section{Asignaciones}
+\label{sec:orgc1c4017}
+
+\subsection{Responsable}
+\label{sec:orgdaca22c}
+
+El responsable de la elaboración de este documento es Nicolás Iriarte, ingeniero a cargo del desarrollo del proyecto.
+
+\subsection{Alcance}
+\label{sec:orgaf51da6}
+
+El alcance del test de aceptación se restringirá exclusivamente a la ejecución precisa de instrucciones por parte del emulador, excluyendo la evaluación del funcionamiento de los periféricos que puedan estar emulados.
+
+\subsection{Objetivos}
+\label{sec:orga40b0ee}
+
+Los objetivos son:
+
+\begin{itemize}
+\item Determinal si el sistema cumple con los requerimientos.
+\item Reportar las diferencias entre el comportamiento esperado del sistema y el observado.
+\item Generar un ambiente de pruebas automáticas que permita verificar el correcto funcionamiento del emulador a medida que su desarrollo avance.
+\end{itemize}
+
+
+\subsection{Precondiciones}
+\label{sec:org5ca5790}
+
+Las precondiciones extenas son:
+
+\begin{itemize}
+\item Se dispondrá en todo momento del emulador en su fase de desarrollo.
+\item Se tendrá acceso a un servidor GitLab para pruebas automáticas.
+\item Se tendrá comunicación con expertos y se podrán realizar pruebas contra un modelo de referencia para clarificar dudas y chequear resultados.
+\item El emulador a ser testeado dispondrá de una API bien documentada para su comunicación.
+\end{itemize}
+
+
+\section{Bases del test}
+\label{sec:bases_del_test}
+
+Las bases del test consisten en las siguientes especificaciones:
+\begin{itemize}
+\item Planificación del producto y requerimientos.
+\item Especificación de requerimientos de software.
+\item Documento de especificación de arquitectura.
+\end{itemize}
+
+\section{Estrategia general del test}
+\label{sec:estra_general_test}
+
+\subsection{Características de calidad}
+\label{sec:caracteristicas_de_calidad}
+
+Las caracterpísticas de calidad para realizar el test:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | m{5cm} | m{5cm} | }
+		\hline
+		\rowcolor{gray!50} % Coloring the first row
+		\textbf{Característica de calidad} & \textbf{Importancia relativa (\%)} \\ \hline
+    Funcionalidad & 50 \\ \hline
+    Confiabilidad & 25 \\ \hline
+    Cambiabilidad & 15 \\ \hline
+    Usabilidad & 10 \\ \hline
+    \rowcolor{gray!50} % Coloring the first row
+		\textbf{TOTAL} & \textbf{100}
+    \\ \hline
+	\end{tabular}
+
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+\item Funcionalidad: El emulador del procesador debe ser capaz de ejecutar las instrucciones del procesador de manera precisa y sin errores, ya que esto es esencial para garantizar la fiabilidad de los resultados de la emulación.
+\item Confiabilidad: Debe ser capaz de mantener un rendimiento estable y confiable durante largos períodos de procesamiento continuo, incluso durante horas de ejecución ininterrumpida. El emulador debe ser capaz de gestionar eficientemente los recursos y prevenir cualquier degradación del rendimiento que pueda surgir debido a la carga prolongada, garantizando así una emulación consistente y precisa del procesador.
+\item Cambiabilidad: El software debe poder ser fácilmente actualizable y adaptable. La razón de esto es que se trata de un software en desarrollo activo, donde nuevas versiones serán emitidas constantemente.
+\item Usabilidad: Se debe tener acceso rápido y sencillo a información relevante sobre el estado del emulador. Se debe poder visualizar de manera clara y accesible los parámetros relacionados con la emulación del procesador, como el estado de sus registros y cualquier mensaje de error o advertencia que pueda surgir durante la operación. Esto facilitará la monitorización y el diagnóstico de posibles problemas, garantizando un uso eficiente y efectivo del emulador.
+\end{itemize}
+
+
+\subsection{Características de calidad de niveles de prueba}
+\label{sec:caracteristicas_de_calidad_niveles_de_prueba}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | m{3cm} | m{2.7cm} | m{2.5cm} | m{2.7cm} | m{2.5cm} | }
+		\hline
+		\rowcolor{gray!50} % Coloring the first row
+		\textbf{-} & \textbf{Funcionalidad} & \textbf{Confiabilidad} & \textbf{Cambiabilidad} & \textbf{Usabilidad} \\ \hline
+    \textbf{Importancia relativa} & 50\% & 25\% & 15\% & 10\%  \\ \hline
+    \textbf{Unit test} & ++ & + &  & +  \\ \hline
+    \textbf{Software integration test} & + & ++ & + & +  \\ \hline
+    \textbf{Hardware / Software integration test} &  &  &  &   \\ \hline
+    \textbf{Acceptance Tests} & ++ & ++ & ++ & ++  \\ \hline
+    \textbf{Field test} & + & + & + & +
+    \\ \hline
+	\end{tabular}
+
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Referencias:
+\begin{itemize}
+\item ++: La característica de calidad es predominante para el nivel de test.
+\item +: La característica de calidad es relevante para el nivel de test.
+\item Vacío: La característica de calidad no es relevante para el nivel de test.
+\end{itemize}
+
+Se indica a continuación el motivo de la selección de cada tipo de test para cada tipo decaracterística de calidad.
+
+\begin{itemize}
+\item Funcionalidad: Esta característica se evalua en todos los niveles de test, ya que es esencial para garantizar el correcto funcionamiento del emulador. Siendo los tests unitarios y de aceptación los más relevantes, ya que el primero permite evaluar el comportamiento de cada componente del emulador de manera aislada, y el segundo permite evaluar el comportamiento del emulador en su conjunto.
+\item Confiabilidad: Esta característica se evalua en todos los niveles de test, ya que es esencial para garantizar la confiabilidad del emulador. Siendo los tests de integración de software y de aceptación los más relevantes, ya que ambos permiten verificar el comportamiento del emulador en su conjunto.
+\item Cambiabilidad: Esta característica se evalua predominantemente en los tests de aceptación, ya que en ellos se puede garantizar que el emulador puede ser actualizado y adaptado de manera sencilla.
+\item Usabilidad: Se evalua en todos los niveles de test, siendo los tests de aceptación los más relevantes, ya que en ellos se puede garantizar que el emulador es fácil de usar y que se puede acceder de manera rápida y sencilla a información relevante sobre su estado.
+\end{itemize}
+
+
+\section{Estrategia por nivel de prueba}
+\label{sec:estrategia_por_nivel_de_prueba}
+
+\subsection{División del sistema en subsistemas}
+\label{sec:division_del_sistema_en_subsistemas}
+
+A continuación se determinan los subsistemas de software en los que se divide el emulador del procesador. Dichos subsistemas son descritos en mayor detalle en la entrada \textbf{AD.02} de la Tabla~\ref{tab:referencias}.
+
+\begin{itemize}
+\item Subsistema A, CPU: Modelo del procesador Leon3, encargado de interpretar cada instrucción y ejecutarla. Dicho subsistema es el núcleo del emulador, y se comunica con el resto de los subsistemas.
+\item Subsistema B, Memoria: Encargado de gestionar la memoria emulada del sistema, permitiendo la lectura y escritura de datos. Dicho modelo también permite el mapeo de dispositivos de entrada/salida.
+\item Subsistema C, Registros: Encargado de gestionar los registros del procesador, permitiendo la lectura, escritura y volcado de los mismos.
+\item Subsistema D, Scheduler y TimeKeeper: Encargado de gestionar el tiempo y la planificación de tareas, permitiendo la emulación de sistemas en tiempo real.
+\item Subsistema E, API: Encargado de su instanciación, configuración y de gestionar su comunicación con otros dispositivos, permitiendo el control del mismo.
+\end{itemize}
+
+\subsection{Importancia relativa de los subsistemas}
+\label{sec:importancia_relativa_de_los_subsistemas}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | m{5cm} | m{5cm} | }
+		\hline
+		\rowcolor{gray!50} % Coloring the first row
+		\textbf{Subsistema} & \textbf{Importancia relativa (\%)} \\ \hline
+    CPU & 30 \\ \hline
+    Memoria & 15 \\ \hline
+    Registros & 30 \\ \hline
+    Scheduler \& TimeKeeper & 10 \\ \hline
+    API & 15 \\ \hline
+    \rowcolor{gray!50} % Coloring the first row
+		\textbf{TOTAL} & \textbf{100}
+    \\ \hline
+	\end{tabular}
+
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Determinación de  la importancia  de test por combinaciones de subsistema y características de calidad}
+\label{sec:determinacion_importancia_test}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ | m{3cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | }
+		\hline
+		\rowcolor{gray!50} % Coloring the first row
+		\textbf{-} & \textbf{Sub. A} & \textbf{Sub. B} & \textbf{Sub. C} & \textbf{Sub. D} & \textbf{Sub.E} \\ \hline
+    \textbf{Importancia relativa} & 30\% & 15\% & 30\% & 10\% & 15\%  \\ \hline
+    \textbf{Funcionalidad} & ++ & + & ++ &  & + \\ \hline
+    \textbf{Confiabilidad} & ++ & + & ++ & ++ & \\ \hline
+    \textbf{Cambiabilidad} &  &  &  & & ++ \\ \hline
+    \textbf{Usabilidad} & + & + & + & + & ++
+    \\ \hline
+	\end{tabular}
+
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Referencias:
+\begin{itemize}
+\item ++: La característica de calidad es predominante para el subsistema.
+\item +: La característica de calidad es relevante para el subsistema.
+\item Vacío: La característica de calidad no es relevante para el subsistema.
+\end{itemize}
+
+
+\end{document}
