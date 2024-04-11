@@ -24,8 +24,11 @@ end;
 
 architecture alu_arq of alu is
 
-  constant ADD_OPCODE : std_logic_vector(5 downto 0) := "010000";
-  constant SUB_OPCODE : std_logic_vector(5 downto 0) := "000100";
+  constant ADD_OPCODE  : std_logic_vector(5 downto 0) := "010000";
+  constant SUB_OPCODE  : std_logic_vector(5 downto 0) := "000100";
+  constant UMUL_OPCODE : std_logic_vector(5 downto 0) := "011010";
+  constant SMUL_OPCODE : std_logic_vector(5 downto 0) := "011011";
+
 
   component adder is
     port(
@@ -47,12 +50,25 @@ architecture alu_arq of alu is
       );
   end component;
 
+  component multiplicator is
+    port(
+      instruction_i : in  std_logic_vector(31 downto 0);
+      rs1_i         : in  std_logic_vector(31 downto 0);
+      rs2_i         : in  std_logic_vector(31 downto 0);
+      result_o      : out std_logic_vector(31 downto 0);
+      icc_o         : out std_logic_vector(3 downto 0)
+      );
+  end component;
+
   -- Declare signals for adder and subtractor results
-  signal adder_result : std_logic_vector(31 downto 0);
-  signal adder_icc    : std_logic_vector(3 downto 0);
+  signal adder_result : std_logic_vector(31 downto 0) := (others => '0');
+  signal adder_icc    : std_logic_vector(3 downto 0)  := (others => '0');
 
   signal subtractor_result : std_logic_vector(31 downto 0) := (others => '0');
   signal subtractor_icc    : std_logic_vector(3 downto 0)  := (others => '0');
+
+  signal multiplicator_result : std_logic_vector(31 downto 0) := (others => '0');
+  signal multiplicator_icc    : std_logic_vector(3 downto 0)  := (others => '0');
 
 
   -- Helpers
@@ -86,25 +102,26 @@ begin
       icc_o         => subtractor_icc
       );
 
-  -- Use a case statement to select the result based on the instruction
-  process(instruction_i, rs1_i, rs2_i)
-  begin
-    case instruction_i(24 downto 19) is
-      when ADD_OPCODE =>
-        report "Performing addition" severity warning;
-        rd_o  <= adder_result;
-        icc_o <= adder_icc;
-      when SUB_OPCODE =>
-        report "Performing subtraction" severity warning;
-        rd_o  <= adder_result;
-        icc_o <= adder_icc;
-      -- rd_o  <= subtractor_result;
-      -- icc_o <= subtractor_icc;
-      when others =>                    -- Default case (e.g., subtraction)
-        -- If the instruction is zero or has unsettled bits, do nothing.
-        report "Invalid OPCODE: 0b" & debug_vector_as_string(instruction_i(24 downto 19)) severity warning;
-    end case;
-  end process;
+  multiplicator_instance : multiplicator
+    port map (
+      instruction_i => instruction_i,
+      rs1_i         => rs1_i,
+      rs2_i         => rs2_i,
+      result_o      => multiplicator_result,
+      icc_o         => multiplicator_icc
+      );
 
+  -- Use a case statement to select the result based on the instruction
+  rd_o <= adder_result when (instruction_i(24 downto 19) = ADD_OPCODE) else
+          subtractor_result when (instruction_i(24 downto 19) = SUB_OPCODE) else
+          multiplicator_result when ((instruction_i(24 downto 19) = UMUL_OPCODE) or
+                                     (instruction_i(24 downto 19) = SMUL_OPCODE)) else
+          subtractor_result;
+
+  icc_o <= adder_icc when (instruction_i(24 downto 19) = ADD_OPCODE) else
+           subtractor_icc when (instruction_i(24 downto 19) = SUB_OPCODE) else
+           multiplicator_icc when ((instruction_i(24 downto 19) = UMUL_OPCODE) or
+                                   (instruction_i(24 downto 19) = SMUL_OPCODE)) else
+           subtractor_icc;
 
 end;

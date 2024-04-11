@@ -6,7 +6,7 @@ use IEEE.numeric_std.all;
 
 -- We are programming on VHDL. This is a VHDL file.
 
-entity subtractor is
+entity multiplicator is
   port(
     instruction_i : in  std_logic_vector(31 downto 0);
     rs1_i         : in  std_logic_vector(31 downto 0);
@@ -16,22 +16,15 @@ entity subtractor is
     );
 end;
 
-architecture subtractor_arq of subtractor is
+
+
+architecture multiplicator_arq of multiplicator is
+  constant UMUL_OPCODE : std_logic_vector(5 downto 0) := "011010";
+  constant SMUL_OPCODE : std_logic_vector(5 downto 0) := "011011";
+
   signal operand2 : std_logic_vector(31 downto 0) := (others => '0');
   signal result   : std_logic_vector(31 downto 0) := (others => '0');
 
-  function minus(A, B : std_logic_vector(31 downto 0)) return std_logic_vector is
-    variable carry  : std_ulogic;
-    variable output : std_logic_vector(31 downto 0);
-  begin
-    carry := '1';
-
-    for i in 0 to 31 loop
-      output(i) := A(i) xor (not B(i)) xor carry;
-      carry     := (A(i) and (not B(i))) or (A(i) and carry) or (carry and (not B(i)));
-    end loop;
-    return output;
-  end;
 
   function debug_vector_as_string (a : std_logic_vector) return string is
     variable b    : string (1 to a'length) := (others => NUL);
@@ -44,36 +37,51 @@ architecture subtractor_arq of subtractor is
     return b;
   end function;
 
+  function signed_multiplication(L, R : std_logic_vector(31 downto 0)) return std_logic_vector is
+    variable ret : std_logic_vector(63 downto 0);
+  begin
+    ret := std_logic_vector(signed(L) * signed(R));
+    return ret(31 downto 0);
+  end;
+
+
+  function unsigned_multiplication(L, R : std_logic_vector(31 downto 0)) return std_logic_vector is
+    variable ret : std_logic_vector(63 downto 0);
+  begin
+    ret := std_logic_vector(unsigned(L) * unsigned(R));
+    return ret(31 downto 0);
+  end;
+
+
 begin
   -- operand2 := if (i = 0) then r[rs2] else sign_extend(simm13); INFO: (A)
   --
-  -- if (SUB or SUBcc) then INFO: Always TRUE
-  --   result ← r[rs1] - operand2; INFO: (B)
-  -- else if (SUBX or SUBXcc) then
-  --   result ← r[rs1] - operand2 - C;
+  -- INFO: (B)
+  -- if (UMUL or UMULcc) then
+  --   (Y, result) ← multiply_unsigned(r[rs1], operand2);
+  -- else if (SMUL or SMULcc) then
+  --   (Y, result) ← multiply_signed(r[rs1], operand2);
   --
   -- next;
   --
   -- if (rd ≠ 0) then INFO: We assume always TRUE
   --   r[rd] ← result; INFO: (C)
   --
-  -- if (SUBcc or SUBXcc) then ( INFO: Always TRUE
+  -- if (UMULcc or SMULcc) then ( INFO: Always TRUE
   --   N ← result<31>; INFO: (D)
   --
   --   Z ← if (result = 0) then 1 else 0; INFO: (E)
   --
   --   INFO: (F)
-  --   V ← (r[rs1]<31> and (not operand2<31>) and (not result<31>)) or
-  --       ((not r[rs1]<31>) and operand2<31> and result<31>);
+  --   V ← 0;
   --
   --   INFO: (G)
-  --   C ← ((not r[rs1]<31>) and operand2<31>) or
-  --       (result<31> and ((not r[rs1]<31>) or operand2<31>))
+  --   C ← 0
   -- );
 
   -- BEGIN: (A)
   -- Check the 13bit of `instruction_i`
-  process(instruction_i, rs2_i)
+  process(instruction_i, rs1_i, rs2_i)
   begin
     if instruction_i(13) = '0' then
       operand2 <= rs2_i;
@@ -84,8 +92,10 @@ begin
   end process;
 
   -- BEGIN: (B)
-  -- Calculate the subtraction and assing to `result`
-  result <= minus(rs1_i, operand2);
+  -- Calculate the multiplication and assing to `result`
+  result <= signed_multiplication(rs1_i, operand2) when (instruction_i(24 downto 19) = SMUL_OPCODE) else
+            unsigned_multiplication(rs1_i, operand2) when (instruction_i(24 downto 19) = UMUL_OPCODE) else
+            (others => '0');  -- In reality this should never happen...
 
   -- BEGIN: (C)
   -- Assing the result to `result_o`
@@ -109,12 +119,10 @@ begin
   --   report "-----------";
   -- end process;
 
-  icc_o(1) <= (rs1_i(31) and operand2(31) and (not result(31))) or
-              ((not rs1_i(31)) and (not operand2(31)) and result(31));
+  icc_o(1) <= '0';
 
   -- BEGIN: (G)
   -- Assing the C to `icc_o`
-  icc_o(0) <= ((not rs1_i(31)) and operand2(31)) or
-              (result(31) and ((not rs1_i(31)) or operand2(31)));
+  icc_o(0) <= '0';
 
 end;

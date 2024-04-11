@@ -73,7 +73,7 @@ begin
 
   -- BEGIN: (A)
   -- Check the 13bit of `instruction_i`
-  process(instruction_i, rs2_i)
+  process(instruction_i, rs1_i, rs2_i)
   begin
     if instruction_i(13) = '0' then
       operand2 <= rs2_i;
