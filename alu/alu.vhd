@@ -25,7 +25,7 @@ end;
 architecture alu_arq of alu is
 
   constant ADD_OPCODE  : std_logic_vector(5 downto 0) := "010000";
-  constant SUB_OPCODE  : std_logic_vector(5 downto 0) := "000100";
+  constant SUB_OPCODE  : std_logic_vector(5 downto 0) := "010100";
   constant UMUL_OPCODE : std_logic_vector(5 downto 0) := "011010";
   constant SMUL_OPCODE : std_logic_vector(5 downto 0) := "011011";
 

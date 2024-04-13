@@ -194,7 +194,7 @@
 	\vspace{3cm}
 	{\Huge \textbf{\ttitle}} \\
 	\vspace{1cm}
-	{\Large \textbf{Master Test Plan}}\\
+	{\Large \textbf{TRABAJO FINAL CIRCUITOS LÓGICOS PROGRAMABLES (CLP)}}\\
 	\vspace{4cm}
 
 
@@ -203,12 +203,12 @@
 	{\Large \authorname \\}
 	\vspace{1cm}
 
-	{\normalsize Director:\\}
-	{\Large \supname \hspace{1px} (\pertesupname) \\}
-	%\vspace{2cm}
+	%% {\normalsize Director:\\}
+	%% {\Large \supname \hspace{1px} (\pertesupname) \\}
+	\vspace{2cm}
 	\ifbool{codirector}{% If the codirector class option has been specified
 	\vspace{1cm}
-	{\normalsize Docentes:\\}
+	{\normalsize Docente:\\}
 	{\Large \docentes.  \hspace{1px} \\}
 	}{\vspace{2pc}%nothing
 	}

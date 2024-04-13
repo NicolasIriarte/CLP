@@ -233,7 +233,7 @@ begin
     -- Given a valid SUM instruction add its values
     instruction_tb <= "01" &            -- OP
                       "00000" &  -- RD (Ignored as windows are not implemented)
-                      "000100" &        -- OP3 (Opcode of the instriction)
+                      "010100" &        -- OP3 (Opcode of the instriction)
                       "00000" &         --RS1
                       "0" &             -- I value
                       "00000000" &      -- ASI (UNUSED)
@@ -353,7 +353,7 @@ begin
     -- Given a valid SUM instruction add its values
     instruction_tb <= "01" &            -- OP
                       "00000" &  -- RD (Ignored as windows are not implemented)
-                      "000100" &        -- OP3 (Opcode of the instriction)
+                      "010100" &        -- OP3 (Opcode of the instriction)
                       "00000" &         -- RS1
                       "1" &             -- I value
                       "0000000000011"   -- SIMM13

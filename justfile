@@ -133,7 +133,7 @@ alu:
             $DIR/multiplicator.vhd
 
     ghdl -e $TEST_BENCH
-    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=20ns
+    ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=15ns
 
     cd {{justfile_directory()}}/alu/Doc
     pdflatex -shell-escape \\nonstopmode\\input TF-IriarteNicolas.tex || echo "Compilation failed."
@@ -144,7 +144,7 @@ wave:
     #!/bin/bash
     set -e
     FILE=$(ls -t *.vcd | head -n1)
-    gtkwave $FILE
+    gtkwave --rcvar 'fontname_signals Monospace 16' --rcvar 'fontname_waves Monospace 16' $FILE
 
 # Clean repository.
 clean:
