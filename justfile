@@ -124,13 +124,15 @@ alu:
             $DIR/$TEST_BENCH.vhd \
             $DIR/adder.vhd \
             $DIR/subtractor.vhd \
-            $DIR/multiplicator.vhd
+            $DIR/multiplicator.vhd \
+            $DIR/cpu.vhd
 
     ghdl -s $DIR/$FILE.vhd \
             $DIR/$TEST_BENCH.vhd \
             $DIR/adder.vhd \
             $DIR/subtractor.vhd \
-            $DIR/multiplicator.vhd
+            $DIR/multiplicator.vhd \
+            $DIR/cpu.vhd
 
     ghdl -e $TEST_BENCH
     ghdl -r $TEST_BENCH --vcd=$TEST_BENCH.vcd --stop-time=15ns

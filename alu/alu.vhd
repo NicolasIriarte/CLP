@@ -5,7 +5,6 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 -- We are programming on VHDL. This is a VHDL file.
-
 entity alu is
   port(
     instruction_i : in  std_logic_vector(31 downto 0);
@@ -15,11 +14,6 @@ entity alu is
     icc_o         : out std_logic_vector(3 downto 0)
     );
 
--- Sum
-
--- Resta
--- Mult
--- Desplazamiento
 end;
 
 architecture alu_arq of alu is

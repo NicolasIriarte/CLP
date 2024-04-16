@@ -188,7 +188,7 @@ Opcode y dependiendo de este último, seleccionará que sub-componente
 redireccionar como salida del mismo.
 
 \section{Simulaciones}
-\label{sec:orgf3b3b3b}
+\label{sec:org0000000}
 
 Durante el desarrollo del presente trabajo, se realizaron multiples simulaciones de distintas entradas e instrucciones para verificar el correcto funcionamiento de los componentes implementados. Dichas entradas buscaron verificar distintos aspectos, tales como correcto funcionamiento de los ICC, busqueda de overflows, correcto calculo e interpretación de valores negativos. A continuación se deja un grafico generado a partir de la simulación del test-bench generado:
 
@@ -203,6 +203,54 @@ Durante el desarrollo del presente trabajo, se realizaron multiples simulaciones
 
 \vspace{25px}
 
+\section{Resumen del proyecto}
+\label{sec:org0000001}
+
+Tras su desarrollo e implementación, se pudo sintetizar las operaciones deseadas. Generando de esta manera el siguiente resumen por parte de Vivado:
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\textwidth]{./Figuras/project-summary.png}
+  \caption{Resumen del proyecto por parte de la herramienta Vivado.}
+  \label{fig:project-summary}
+\end{figure}
+
+\vspace{25px}
+
+\newpage
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=.5\textwidth]{./Figuras/utilization-table.png}
+  \caption{Tabla de utilización de recursos.}
+  \label{fig:utilization-table}
+\end{figure}
+
+\vspace{25px}
+
+\section{Anexos}
+
+\subsection{Ejemplo instrucción ADDcc}
+Dicha trama se explica en mayor detalle en el documento \textbf{AD.01} en la página 106 y 170. Tenér en cuenta que se hicieron algunas simplificaciones, tal como solo implementar las variaciones en donde el ICC es actualizado.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=.8\textwidth]{./Figuras/addcc-format.png}
+  \caption{Formato de trama en instrucción ``ADDcc''.}
+  \label{fig:addcc-format}
+\end{figure}
+
+\vspace{25px}
+\newpage
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\textwidth]{./Figuras/addcc-logic.png}
+  \caption{Comportamiento de la instrucción ``ADDcc''.}
+  \label{fig:addcc-logic}
+\end{figure}
+
+\vspace{25px}
 
 
 \end{document}
